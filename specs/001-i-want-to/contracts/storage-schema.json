@@ -1,0 +1,182 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Extension Storage Schema",
+    "description": "Data structures for browser storage (storage.local and storage.sync)",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "ExtensionStorageLocal": {
+        "type": "object",
+        "description": "Fast access storage for real-time audio control",
+        "required": ["extensionState", "globalSettings"],
+        "properties": {
+          "extensionState": {
+            "type": "object",
+            "required": ["activeTabs", "lastUpdate", "version", "isEnabled"],
+            "properties": {
+              "activeTabs": {
+                "type": "array",
+                "items": {"$ref": "extension-api.json#/components/schemas/AudioTab"},
+                "maxItems": 50,
+                "description": "Currently monitored audio tabs (max 50)"
+              },
+              "lastUpdate": {
+                "type": "integer",
+                "description": "Timestamp of last state update"
+              },
+              "version": {
+                "type": "string",
+                "pattern": "^\\d+\\.\\d+\\.\\d+$",
+                "description": "Extension version for migration"
+              },
+              "isEnabled": {
+                "type": "boolean",
+                "description": "Master enable/disable switch"
+              }
+            }
+          },
+          "globalSettings": {
+            "$ref": "extension-api.json#/components/schemas/GlobalSettings",
+            "description": "Extension-wide configuration"
+          }
+        }
+      },
+      "ExtensionStorageSync": {
+        "type": "object",
+        "description": "Cross-browser synchronization storage",
+        "required": ["volumeSettings", "globalSettings"],
+        "properties": {
+          "volumeSettings": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "extension-api.json#/components/schemas/VolumeSettings"
+            },
+            "description": "Domain-specific volume settings keyed by domain"
+          },
+          "globalSettings": {
+            "$ref": "extension-api.json#/components/schemas/GlobalSettings",
+            "description": "Backup/sync copy of global settings"
+          },
+          "migrationVersion": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Version for storage schema migration"
+          }
+        }
+      },
+      "StorageKey": {
+        "type": "string",
+        "enum": [
+          "extensionState",
+          "globalSettings",
+          "volumeSettings",
+          "migrationVersion"
+        ],
+        "description": "Valid storage keys"
+      },
+      "DomainKey": {
+        "type": "string",
+        "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$",
+        "description": "Valid domain key format for volumeSettings",
+        "examples": [
+          "youtube.com",
+          "open.spotify.com",
+          "twitch.tv",
+          "soundcloud.com"
+        ]
+      },
+      "StorageOperation": {
+        "type": "object",
+        "description": "Storage operation for batch processing",
+        "required": ["operation", "key"],
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": ["get", "set", "remove", "clear"],
+            "description": "Storage operation type"
+          },
+          "key": {
+            "oneOf": [
+              {"$ref": "#/components/schemas/StorageKey"},
+              {"$ref": "#/components/schemas/DomainKey"}
+            ],
+            "description": "Storage key to operate on"
+          },
+          "value": {
+            "type": "object",
+            "description": "Value for set operations (optional)"
+          },
+          "storageType": {
+            "type": "string",
+            "enum": ["local", "sync"],
+            "default": "local",
+            "description": "Target storage area"
+          }
+        }
+      },
+      "StorageQuota": {
+        "type": "object",
+        "description": "Storage quota limits and usage tracking",
+        "required": ["maxItems", "maxBytes", "currentItems", "currentBytes"],
+        "properties": {
+          "maxItems": {
+            "type": "integer",
+            "description": "Maximum number of storage items"
+          },
+          "maxBytes": {
+            "type": "integer", 
+            "description": "Maximum storage size in bytes"
+          },
+          "currentItems": {
+            "type": "integer",
+            "description": "Current number of items stored"
+          },
+          "currentBytes": {
+            "type": "integer",
+            "description": "Current storage usage in bytes"
+          },
+          "quotaUsagePercent": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Percentage of quota used"
+          }
+        }
+      },
+      "StorageMigration": {
+        "type": "object",
+        "description": "Data migration configuration between versions",
+        "required": ["fromVersion", "toVersion", "migrations"],
+        "properties": {
+          "fromVersion": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Source version"
+          },
+          "toVersion": {
+            "type": "string",
+            "pattern": "^\\d+\\.\\d+\\.\\d+$",
+            "description": "Target version"
+          },
+          "migrations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["field", "action"],
+              "properties": {
+                "field": {"type": "string", "description": "Field path to migrate"},
+                "action": {"type": "string", "enum": ["add", "remove", "rename", "transform"], "description": "Migration action"},
+                "defaultValue": {"description": "Default value for add action"},
+                "newName": {"type": "string", "description": "New name for rename action"},
+                "transformFunction": {"type": "string", "description": "Transform function name"}
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,206 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Extension Message Passing Contracts",
+    "description": "Message schemas for communication between extension components",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "BaseMessage": {
+        "type": "object",
+        "required": ["type", "payload"],
+        "properties": {
+          "type": {
+            "type": "string",
+            "description": "Message type identifier"
+          },
+          "payload": {
+            "type": "object",
+            "description": "Message data"
+          },
+          "timestamp": {
+            "type": "integer",
+            "description": "Message timestamp (optional)"
+          },
+          "requestId": {
+            "type": "string",
+            "description": "Request correlation ID (optional)"
+          }
+        }
+      },
+      "TabAudioUpdateMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["TAB_AUDIO_UPDATE"]},
+              "payload": {
+                "type": "object",
+                "required": ["tabId", "audioTab"],
+                "properties": {
+                  "tabId": {"type": "integer"},
+                  "audioTab": {"$ref": "extension-api.json#/components/schemas/AudioTab"}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "SetTabVolumeMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["SET_TAB_VOLUME"]},
+              "payload": {
+                "type": "object",
+                "required": ["tabId", "volumeLevel"],
+                "properties": {
+                  "tabId": {"type": "integer"},
+                  "volumeLevel": {"type": "integer", "minimum": 0, "maximum": 200}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "MuteTabMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["MUTE_TAB"]},
+              "payload": {
+                "type": "object",
+                "required": ["tabId", "isMuted"],
+                "properties": {
+                  "tabId": {"type": "integer"},
+                  "isMuted": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "GetActiveTabsMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["GET_ACTIVE_TABS"]},
+              "payload": {"type": "object"}
+            }
+          }
+        ]
+      },
+      "ActiveTabsResponseMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["ACTIVE_TABS_RESPONSE"]},
+              "payload": {
+                "type": "object",
+                "required": ["activeTabs"],
+                "properties": {
+                  "activeTabs": {
+                    "type": "array",
+                    "items": {"$ref": "extension-api.json#/components/schemas/AudioTab"}
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ApplyVolumeMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["APPLY_VOLUME"]},
+              "payload": {
+                "type": "object",
+                "required": ["volumeLevel", "isMuted"],
+                "properties": {
+                  "volumeLevel": {"type": "integer", "minimum": 0, "maximum": 200},
+                  "isMuted": {"type": "boolean"}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "AudioElementsDetectedMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["AUDIO_ELEMENTS_DETECTED"]},
+              "payload": {
+                "type": "object",
+                "required": ["hasAudio"],
+                "properties": {
+                  "hasAudio": {"type": "boolean"},
+                  "audioElements": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tagName": {"type": "string", "enum": ["AUDIO", "VIDEO"]},
+                        "src": {"type": "string"},
+                        "volume": {"type": "number", "minimum": 0, "maximum": 1},
+                        "muted": {"type": "boolean"},
+                        "paused": {"type": "boolean"}
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
+      },
+      "UpdateSettingsMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["UPDATE_SETTINGS"]},
+              "payload": {
+                "type": "object",
+                "required": ["settingsType"],
+                "properties": {
+                  "settingsType": {"type": "string", "enum": ["global", "domain"]},
+                  "globalSettings": {"$ref": "extension-api.json#/components/schemas/GlobalSettings"},
+                  "domainSettings": {"$ref": "extension-api.json#/components/schemas/VolumeSettings"}
+                }
+              }
+            }
+          }
+        ]
+      },
+      "ErrorMessage": {
+        "allOf": [
+          {"$ref": "#/components/schemas/BaseMessage"},
+          {
+            "properties": {
+              "type": {"enum": ["ERROR"]},
+              "payload": {
+                "type": "object",
+                "required": ["error", "code"],
+                "properties": {
+                  "error": {"type": "string", "description": "Error message"},
+                  "code": {"type": "string", "enum": ["TAB_NOT_FOUND", "PERMISSION_DENIED", "AUDIO_CONTROL_FAILED", "STORAGE_ERROR"]},
+                  "details": {"type": "object", "description": "Additional error context"}
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

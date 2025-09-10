@@ -1,0 +1,469 @@
+/* CSS Custom Properties for theming */
+:root {
+  --bg-primary: #fff;
+  --bg-secondary: #f8f9fa;
+  --bg-accent: #4A90E2;
+  --bg-accent-dark: #3A80D2;
+  --bg-muted: #f0f0f0;
+  --bg-error: #E24A4A;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --text-muted: #999;
+  --text-on-accent: white;
+  --border-color: #eee;
+  --border-muted: #ddd;
+  --slider-track: #ddd;
+  --slider-thumb: #4A90E2;
+  --scrollbar-track: #f1f1f1;
+  --scrollbar-thumb: #c1c1c1;
+  --scrollbar-thumb-hover: #a8a8a8;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-primary: #1e1e1e;
+    --bg-secondary: #2d2d2d;
+    --bg-accent: #0d7377;
+    --bg-accent-dark: #14a085;
+    --bg-muted: #3a3a3a;
+    --bg-error: #cf6679;
+    --text-primary: #e1e1e1;
+    --text-secondary: #b3b3b3;
+    --text-muted: #8a8a8a;
+    --text-on-accent: #ffffff;
+    --border-color: #404040;
+    --border-muted: #525252;
+    --slider-track: #525252;
+    --slider-thumb: #0d7377;
+    --scrollbar-track: #2d2d2d;
+    --scrollbar-thumb: #525252;
+    --scrollbar-thumb-hover: #6a6a6a;
+  }
+}
+
+/* Base styles */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 14px;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  width: 400px;
+  min-height: 200px;
+  overflow-x: hidden;
+}
+
+#popup-container {
+  width: 100%;
+  min-height: 200px;
+}
+
+/* Header */
+.popup-header {
+  background: var(--bg-accent);
+  color: var(--text-on-accent);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--bg-accent-dark);
+}
+
+.popup-header h1 {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Loading indicator */
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 40px 20px;
+  gap: 12px;
+}
+
+.spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid var(--border-muted);
+  border-top: 3px solid var(--bg-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Tab controls */
+.tab-controls {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.tab-control {
+  display: flex;
+  align-items: center;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  gap: 12px;
+  position: relative;
+}
+
+.tab-control:hover {
+  background: var(--bg-secondary);
+}
+
+.tab-control:last-child {
+  border-bottom: none;
+}
+
+/* Favicon */
+.favicon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  object-fit: cover;
+}
+
+.favicon.default-favicon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-muted);
+  font-size: 12px;
+}
+
+/* Tab title */
+.tab-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.tab-title {
+  font-weight: 500;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.tab-domain {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+/* Volume controls */
+.volume-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.volume-slider {
+  width: 80px;
+  height: 6px;
+  background: var(--slider-track);
+  border-radius: 3px;
+  outline: none;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.volume-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: var(--slider-thumb);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+  width: 16px;
+  height: 16px;
+  background: var(--slider-thumb);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+}
+
+.volume-slider:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.volume-slider:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+.volume-slider:disabled::-moz-range-thumb {
+  cursor: not-allowed;
+}
+
+/* Amplified volume styling */
+.volume-slider.amplified {
+  background: linear-gradient(to right, var(--slider-thumb) 0%, var(--bg-error) 100%);
+}
+
+.volume-slider.amplified::-webkit-slider-thumb {
+  background: var(--bg-error);
+}
+
+.volume-slider.amplified::-moz-range-thumb {
+  background: var(--bg-error);
+}
+
+/* Audio icon (mute button) */
+.audio-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  color: var(--text-secondary);
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.audio-icon:hover {
+  background: var(--bg-muted);
+}
+
+.audio-icon:focus {
+  outline: 2px solid var(--bg-accent);
+  outline-offset: 1px;
+}
+
+.audio-icon.muted {
+  color: var(--bg-error);
+}
+
+.audio-icon.muted:before {
+  content: "🔇";
+}
+
+.audio-icon:not(.muted):before {
+  content: "🔊";
+}
+
+/* Volume percentage display */
+.volume-percentage {
+  font-size: 11px;
+  color: var(--text-secondary);
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Amplification indicator */
+.amplification-indicator {
+  position: absolute;
+  top: 50%;
+  right: 50px;
+  transform: translateY(-50%);
+  background: var(--bg-error);
+  color: var(--text-on-accent);
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+/* Loading indicator for individual tabs */
+.tab-control .loading-indicator {
+  position: absolute;
+  top: 50%;
+  right: 16px;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tab-control .loading-indicator .spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid var(--border-muted);
+  border-top: 2px solid var(--bg-accent);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+/* Empty state */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-secondary);
+}
+
+.empty-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.empty-state p {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.empty-state small {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* Error message */
+.error-message {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--bg-error);
+}
+
+.error-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.error-message p {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Error toast */
+.error-toast {
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  right: 10px;
+  background: var(--bg-error);
+  color: var(--text-on-accent);
+  padding: 12px 16px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.close-toast {
+  background: none;
+  border: none;
+  color: var(--text-on-accent);
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.close-toast:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Popup content */
+.popup-content {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Scrollbar styling */
+.tab-controls::-webkit-scrollbar {
+  width: 6px;
+}
+
+.tab-controls::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.tab-controls::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 3px;
+}
+
+.tab-controls::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-hover);
+}
+
+/* Focus styles for accessibility */
+.volume-slider:focus {
+  outline: 2px solid var(--bg-accent);
+  outline-offset: 2px;
+}
+
+.tab-control:focus-within {
+  background: var(--bg-secondary);
+  outline: 2px solid var(--bg-accent);
+  outline-offset: -2px;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .volume-slider {
+    border: 1px solid #000;
+  }
+  
+  .audio-icon:hover,
+  .close-toast:hover {
+    background: #000;
+    color: #fff;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .spinner {
+    animation: none;
+  }
+  
+  .tab-loading-indicator {
+    animation: none;
+  }
+  
+  .error-toast {
+    animation: none;
+  }
+  
+  .popup-content {
+    animation: none;
+  }
+}

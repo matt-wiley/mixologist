@@ -1,0 +1,154 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Firefox Tab Audio Control Extension API",
+    "description": "Internal API contracts for browser extension message passing between background script, popup, and content scripts",
+    "version": "1.0.0"
+  },
+  "paths": {},
+  "components": {
+    "schemas": {
+      "AudioTab": {
+        "type": "object",
+        "required": ["tabId", "title", "url", "domain", "volumeLevel", "isMuted", "isAudioActive", "lastAudioActivity"],
+        "properties": {
+          "tabId": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Firefox tab identifier"
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 200,
+            "description": "Tab title for display"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri",
+            "description": "Full URL of the tab"
+          },
+          "domain": {
+            "type": "string",
+            "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$",
+            "description": "Extracted domain for settings"
+          },
+          "favicon": {
+            "type": "string",
+            "format": "uri",
+            "description": "Tab favicon URL (optional)"
+          },
+          "volumeLevel": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 200,
+            "description": "Volume percentage (0-200% for amplification)"
+          },
+          "isMuted": {
+            "type": "boolean",
+            "description": "Current mute state"
+          },
+          "isAudioActive": {
+            "type": "boolean",
+            "description": "Whether tab is currently playing audio"
+          },
+          "lastAudioActivity": {
+            "type": "integer",
+            "description": "Timestamp of last audio state change"
+          },
+          "audioElements": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagName": {"type": "string", "enum": ["AUDIO", "VIDEO"]},
+                "src": {"type": "string"},
+                "currentTime": {"type": "number"}
+              }
+            },
+            "description": "Detected audio/video elements (optional)"
+          }
+        }
+      },
+      "VolumeSettings": {
+        "type": "object",
+        "required": ["domain", "defaultVolume", "isMuted", "lastUsed", "isEnabled"],
+        "properties": {
+          "domain": {
+            "type": "string",
+            "pattern": "^[a-z0-9.-]+\\.[a-z]{2,}$",
+            "description": "Website domain"
+          },
+          "defaultVolume": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 200,
+            "description": "Default volume for this domain"
+          },
+          "isMuted": {
+            "type": "boolean",
+            "description": "Default mute state"
+          },
+          "lastUsed": {
+            "type": "integer",
+            "description": "Timestamp of last use"
+          },
+          "isEnabled": {
+            "type": "boolean",
+            "description": "Whether control is enabled for domain"
+          },
+          "customSettings": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Domain-specific overrides (optional)"
+          }
+        }
+      },
+      "GlobalSettings": {
+        "type": "object",
+        "required": ["defaultVolume", "showInactiveTabs", "autoCleanup", "cleanupDelaySeconds", "enableNotifications", "syncSettings", "minVolumeStep", "maxVolumeLimit"],
+        "properties": {
+          "defaultVolume": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 200,
+            "description": "Default volume for new tabs"
+          },
+          "showInactiveTabs": {
+            "type": "boolean",
+            "description": "Show tabs with no current audio"
+          },
+          "autoCleanup": {
+            "type": "boolean",
+            "description": "Auto-remove stopped audio tabs"
+          },
+          "cleanupDelaySeconds": {
+            "type": "integer",
+            "minimum": 5,
+            "maximum": 300,
+            "description": "Delay before removing inactive tabs"
+          },
+          "enableNotifications": {
+            "type": "boolean",
+            "description": "Show notifications for audio changes"
+          },
+          "syncSettings": {
+            "type": "boolean",
+            "description": "Enable cross-browser sync"
+          },
+          "minVolumeStep": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10,
+            "description": "Minimum volume adjustment step"
+          },
+          "maxVolumeLimit": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 200,
+            "description": "Maximum allowed volume level"
+          }
+        }
+      }
+    }
+  }
+}

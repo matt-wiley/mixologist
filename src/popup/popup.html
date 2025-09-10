@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mixologist</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div id="popup-container">
+    <!-- Loading indicator shown during initialization -->
+    <div class="loading-indicator" id="main-loading">
+      <div class="spinner"></div>
+      <span>Loading audio tabs...</span>
+    </div>
+
+    <!-- Main content area -->
+    <div class="popup-content" id="popup-content" style="display: none;">
+      <!-- Header -->
+      <div class="popup-header">
+        <h1>Mixologist</h1>
+      </div>
+
+      <!-- Tab controls container -->
+      <div class="tab-controls" id="tab-controls">
+        <!-- Tab control elements will be dynamically inserted here -->
+      </div>
+
+      <!-- Empty state shown when no audio tabs -->
+      <div class="empty-state" id="empty-state" style="display: none;">
+        <div class="empty-icon">🔇</div>
+        <p>No audio tabs detected</p>
+        <small>Play audio in a tab to control volume here</small>
+      </div>
+
+      <!-- Error message container -->
+      <div class="error-message" id="error-message" style="display: none;">
+        <div class="error-icon">⚠️</div>
+        <p id="error-text">Unable to connect to background script</p>
+      </div>
+    </div>
+
+    <!-- Error toast for temporary notifications -->
+    <div class="error-toast" id="error-toast" style="display: none;">
+      <span id="error-toast-text"></span>
+      <button class="close-toast" id="close-toast">&times;</button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

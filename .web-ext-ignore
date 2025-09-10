@@ -1,0 +1,29 @@
+# Development files
+node_modules/
+tests/
+specs/
+scripts/
+templates/
+memory/
+.git/
+.claude/
+
+# Config files
+package.json
+package-lock.json
+.eslintrc.js
+.gitignore
+.lz
+
+# Documentation (keeping README for store)
+CLAUDE.md
+TROUBLESHOOTING.md
+
+# Build artifacts
+web-ext-artifacts/
+
+# Any temp files
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
