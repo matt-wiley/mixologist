@@ -112,6 +112,11 @@ This project was built using **Test-Driven Development** (TDD) methodology:
 
 Current test status: **27/28 integration tests passing (96% success rate)**
 
+## Extension
+
+- https://addons.mozilla.org/en-US/firefox/user/15078575/
+- https://addons.mozilla.org/en-US/developers/addon/mixologist1/versions
+
 ## License
 
 MIT
